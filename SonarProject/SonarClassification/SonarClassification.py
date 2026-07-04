@@ -156,16 +156,27 @@ def predict_obj(input_features):
     # getting the prediction 
     prediction = model.predict(scaled_features)
     print(prediction)
+    if prediction[0] == 1:
+        print('the object is identified as MINE')
+    else: 
+        print('the object is identified as ROCK')
+        
+    
 
 
 ## sample prediction
 ## it is when a new record comes and you want to get the prediction
 
+
+y_test.head() # ground truths
 test_1 = X_test.loc[103].tolist()
 predict_obj(test_1)
 
     
     
+test_2 = X_test.loc[90].tolist()
+predict_obj(test_2)
+
 
 
 
