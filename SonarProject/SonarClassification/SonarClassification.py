@@ -61,7 +61,7 @@ df.groupby(60).mean()
 
 
 
-## Data visualization
+## Data visualizatio
 ### distrobution
 
 # instead of using this for loop to print it one by one
