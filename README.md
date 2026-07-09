@@ -15,7 +15,7 @@ Things that I've learned from each projects are linked and written in Farsi.
 - سیستم ها و افزایش قیمت GPU ها رو الان بسیار خوب درک می کنم.
 - به فکر این هستم که کدها رو توی google colab بزنم به خاطر وجود GPU های قوی تری که وجود داره.
 
-=================================================================
+
 
 ## Regression Projects
 - [Regression House Price](https://github.com/pouniq/MlPracticeProjects/blob/main/HousePrice/HousePriceRegression.qmd)
