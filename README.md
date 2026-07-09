@@ -18,3 +18,4 @@ Things that I've learned from each projects are linked and written in Farsi.
 =================================================================
 
 ## Regression Projects
+- [Regression House Price](https://github.com/pouniq/MlPracticeProjects/blob/main/HousePrice/HousePriceRegression.qmd)
