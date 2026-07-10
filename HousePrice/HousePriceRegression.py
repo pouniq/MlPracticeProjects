@@ -57,4 +57,32 @@ num_cols = df.select_dtypes(include= [np.number]).columns.tolist()
 cat_cols = df.select_dtypes(include = ['object']).columns.tolist()
 
 
+df.isna().sum()
 
+df.duplicated().sum()
+
+
+for col in df.columns:
+    print(df[col].value_counts().head(20))
+
+
+df[num_cols].describe().T
+
+
+
+## Data visulization ##
+for cat in cat_cols:
+    plt.figure(figsize= (10,7))
+    sns.countplot(x = df[cat])
+    plt.title(f'Dist. of {col}')
+    plt.show()
+    
+for cat in cat_cols:
+    print(df[col].value_counts())
+    
+
+plt.figure(figsize=(10,7))
+sns.histplot(df[TARGET_COL], bins = 40, kde=True)
+plt.show()
+
+df[TARGET_COL].value_counts()
