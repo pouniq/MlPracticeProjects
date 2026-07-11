@@ -86,3 +86,32 @@ sns.histplot(df[TARGET_COL], bins = 40, kde=True)
 plt.show()
 
 df[TARGET_COL].value_counts()
+
+
+## histogram plot -- distribution ##
+# for numerical columns #
+fig, axes = plt.subplots(3, 3, figsize=(10,7))
+axes = axes.flatten()
+for i, col in enumerate(df[num_cols]):
+    sns.histplot(df[col], kde=True, ax = axes[i])
+    axes[i].set_title(col, fontsize = 10)
+plt.tight_layout()
+plt.show()
+
+
+fig, axes = plt.subplots(3, 3, figsize=(10,7))
+axes = axes.flatten()
+for i, col in enumerate(df[num_cols]):
+    sns.boxplot(x = df[col], ax = axes[i])
+    axes[i].set_title(col, fontsize = 10)
+plt.tight_layout()
+plt.show()
+# those numbers are based on real world 
+
+sns.heatmap(df[num_cols].corr(), annot=True, center = 0, )
+
+df[num_cols].corr()[TARGET_COL].sort_values(ascending = False)
+
+
+## data preprocessing ##
+
