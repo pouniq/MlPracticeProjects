@@ -4,9 +4,9 @@ Things that I've learned from each projects are linked and written in Farsi.
 
 ## Classification Projects
 
-- [Sonar Classification](https://github.com/pouniq/MlPracticeProjects/tree/main/SonarProject/SonarClassificationReport)
-- [breast cancer classification](https://github.com/pouniq/MlPracticeProjects/tree/main/Cancer/BreastCancerReport)
-- [Fraud Detection classification](https://github.com/pouniq/MlPracticeProjects/blob/main/FraudDetection/CCR_index.qmd)
+- [Sonar Classification](https://pouniq.github.io/MlPracticeProjects_reports/SC_index.html)
+- [breast cancer classification](https://pouniq.github.io/MlPracticeProjects_reports/)
+- [Fraud Detection classification](https://pouniq.github.io/MlPracticeProjects_reports/CCR_index.html)
 
 
 ### خلاصه نکات:
@@ -18,4 +18,4 @@ Things that I've learned from each projects are linked and written in Farsi.
 
 
 ## Regression Projects
-- [Regression House Price](https://github.com/pouniq/MlPracticeProjects/blob/main/HousePrice/HPR_index.qmd)
+- [Regression House Price](https://pouniq.github.io/MlPracticeProjects_reports/HPR_index.html)
