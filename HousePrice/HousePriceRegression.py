@@ -114,4 +114,108 @@ df[num_cols].corr()[TARGET_COL].sort_values(ascending = False)
 
 
 ## data preprocessing ##
+X = df.drop(columns = [TARGET_COL])
+y = df[TARGET_COL]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y ,
+                                                    test_size=0.2,
+                                                    random_state=RANDOM_STATE)
+
+X_train.shape
+X_test.shape
+
+
+## preprocessing pipeline
+numerical_features = X.select_dtypes(include = [np.number]).columns.tolist()
+categorical_features = X.select_dtypes(include = 'str').columns.tolist()
+# categorical_features = X.select_dtypes(exclude = [np.number]').columns.tolist()
+
+
+# numerical features -- preprocessing
+numeric_transformer = Pipeline([
+        ('imputer', SimpleImputer(strategy='median')),
+        ('scaler', StandardScaler())
+])
+
+# categorical features -- preprocessing
+cat_transformer = Pipeline([
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+preprocess = ColumnTransformer(
+
+    transformers= [
+        ('num', numeric_transformer, numerical_features),
+        ('cat', cat_transformer, categorical_features )
+    ]
+)
+
+## baseline model ##
+baseline_pip = Pipeline(
+    steps=[
+        ('preprocess', preprocess),
+        ('model', LinearRegression())
+    ]
+)
+
+baseline_pip.fit(X_train, y_train)
+train_baseline_pred = baseline_pip.predict(X_train)
+root_mean_squared_error(y_train, train_baseline_pred)
+r2_score(y_train, train_baseline_pred)
+
+test_baseline_pred = baseline_pip.predict(X_test)
+root_mean_squared_error(test_baseline_pred, y_test)
+r2_score(y_test, test_baseline_pred)
+
+
+
+## model Selection & optimaziatiom ##
+
+models = {
+    'LinearRegression': LinearRegression(),
+    'ridge': Ridge(random_state=RANDOM_STATE),
+    'lasso': Lasso(random_state=RANDOM_STATE, max_iter= 10000),
+    'RadnomForest': RandomForestRegressor(),
+    'HistGBR': HistGradientBoostingRegressor()
+}
+
+k = 5
+cv = KFold(
+    n_splits= k ,
+    shuffle= True,
+    random_state=RANDOM_STATE
+)
+
+
+scoring = {
+    'rmse': 'neg_root_mean_squared_error',
+    'mae': 'neg_mean_absolute_error',
+    'r2': 'r2'
+}
+
+rows = []
+for name, model in models.items():
+    pipe = Pipeline(
+        steps= [
+            ('preprocess', preprocess),
+            ('model', model)
+        ]
+    )
+    scores = cross_validate(pipe, X_train, y_train, cv = cv , scoring=scoring,
+                            n_jobs= -1)
+    rows.append({
+        'model': name,
+        'cv_rmse': -scores['test_rmse'].mean(),
+        'cv_mae': -scores['test_mae'].mean(),
+        'cv_r2': scores['test_r2'].mean(),
+    })
+
+# sort based on lowest rmse value:
+cv_results = pd.DataFrame(rows).sort_values('cv_rmse')
+print('CV model comparison')
+print(cv_results)
+
+
+best_row = cv_results.iloc[0]
 
