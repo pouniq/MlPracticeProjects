@@ -219,3 +219,82 @@ print(cv_results)
 
 best_row = cv_results.iloc[0]
 
+## Hyper Parameter Tuning ##
+hgb_pipe = Pipeline(
+    [
+        ('preprocess', preprocess),
+        ('model', HistGradientBoostingRegressor(
+            random_state= RANDOM_STATE
+        ))
+    ]
+)
+
+# hyper parameter search
+param_grid = {
+    
+    
+    "model__learning_rate": [0.03, 0.05, 0.1],
+    "model__max_depth": [None, 3, 6],
+    "model__max_leaf_nodes": [15, 31, 63],
+    "model__min_samples_leaf": [20, 50, 100],
+    "model__l2_regularization": [0.0, 0.1, 1.0]
+    
+}
+
+grid = GridSearchCV(
+    estimator= pipe,
+    param_grid= param_grid,
+    cv = cv,
+    scoring= "neg_root_mean_squared_error",
+    n_jobs= -1,
+    verbose= 1
+)
+
+grid.fit(X_train, y_train)
+
+print(-grid.best_score_)
+print(grid.best_params_)
+# best possible combinations of hyper parameter
+
+
+## retrain with best model ##
+best_hgb = Pipeline(
+    [
+        ('preprocess', preprocess),
+        ('model', HistGradientBoostingRegressor(
+            random_state=RANDOM_STATE,
+            max_leaf_nodes=63,
+            l2_regularization=0.1,
+            learning_rate=0.1,
+            max_depth=None,
+            min_samples_leaf=20,
+        ))
+    ]
+)
+
+best_hgb.fit(X_train, y_train)
+
+## evaluation ##
+
+y_train_pred = best_hgb.predict(X_train)
+y_test_pred = best_hgb.predict(X_test)
+
+
+
+
+r2_score(y_train_pred, y_train)
+r2_score(y_test_pred, y_test)
+
+root_mean_squared_error(y_test,y_test_pred)
+
+
+res = y_test_pred - y_test
+plt.scatter(res, y_test, s = 10)
+plt.axhline(0, col = 'red')
+
+sns.histplot(res, kde = True)
+
+## predictive system ##
+def house_price_prediction(Input_features):
+    Input_features = X_train.columns
+    
