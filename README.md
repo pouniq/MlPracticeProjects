@@ -32,3 +32,10 @@ Things that I've learned from each projects are linked and written in Farsi.
 - استفاده از transformedtargetcolumn می توانیم مشکل log رو حل کنیم و با استفاده از همین تابع مقادیر پیشبینی شده را به حالت عادی برگردانیم دیگر کارها نیاز نیست جداگانه انجام شود.
 - اول از همه انتخاب مدل انجام می شود، سپس بهترین مدل انتخاب شد، پارامترهای آن مدل با استفاده از gridsearch یا randomizedsearch بهترین پارامترهای ممکن را برای بهترین مدل پیدا کنیم.
 - می توانیم یک تابعی بسازیم که با دادن اطلاعات پیشبینی کند.
+
+
+
+
+## Clustring Projects
+
+- [Customer Segmentation](https://pouniq.github.io/MlPracticeProjects_reports/CSC_index.html)
