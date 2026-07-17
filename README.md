@@ -18,7 +18,8 @@ Things that I've learned from each projects are linked and written in Farsi.
 
 
 ## Regression Projects
-- [Regression House Price](https://pouniq.github.io/MlPracticeProjects_reports/HPR_index.html)
+
+[Regression House Price](https://pouniq.github.io/MlPracticeProjects_reports/HPR_index.html)
 
 ### خلاصه نکات:
 - رگرسیون به صورت خیلی خوبی بررسی شد.
