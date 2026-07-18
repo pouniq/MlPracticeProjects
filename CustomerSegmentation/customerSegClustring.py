@@ -174,3 +174,21 @@ cluster_sizes_mean
 df.columns
 
 plt.bar(range(0,5),cluster_sizes)
+
+
+# segment customers 
+def assign_customer(income, spneding_score, scaler, model):
+    new_row = pd.DataFrame([[income, spneding_score]],
+                           columns= ["income", 'spending_score'])
+    
+    new_row_scaled = scaler.transform(new_row)
+    cluster_no = model.predict(new_row_scaled)[0]
+    return cluster_no
+
+new_cl = assign_customer(
+    income= 40,
+    spneding_score= 43,
+    scaler= scaler,
+    model= K_means_final
+)
+    
