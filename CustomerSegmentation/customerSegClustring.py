@@ -60,3 +60,117 @@ plt.tight_layout()
 plt.show()
 
 
+
+df.columns
+
+sns.scatterplot(
+    y= 'spending_score',
+    x= 'income',
+    data= df,
+    s = 55
+)
+
+
+
+sns.scatterplot(
+    y= 'preferred_category',
+    x= 'gender',
+    data= df,
+    s = 55
+)
+
+## data preprocessing ##
+
+### feature selection:
+columns_to_select = ['income', 'spending_score']
+X = df[columns_to_select]
+
+# scale features
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+
+# Elbow method - WCSS
+# (find best k value)
+wcss = []
+k_range = range(2, 11)
+print(*k_range)
+
+for k in k_range:
+    K_means = KMeans(n_clusters= k, random_state= RANDOM_STATE, n_init= 10)
+    K_means.fit(X_scaled)
+    wcss.append(K_means.inertia_)
+
+plt.figure(figsize=(10,7))
+plt.plot(list(k_range), wcss, marker = 'o')
+plt.xlabel('Number of clusters')
+plt.ylabel('inertia')
+plt.title('Elbow Method')
+plt.show()
+
+    
+
+# model -- k_means clustring
+K_FINAL = 5
+K_means_final = KMeans(
+    n_clusters= K_FINAL,
+    random_state= RANDOM_STATE,
+    n_init= 10
+)
+K_means_final.fit(X_scaled)
+clusters = K_means_final.predict(X_scaled)
+
+df_cluster = df.copy(deep = True)
+
+df_cluster['cluster'] = clusters
+
+sns.scatterplot(
+    x = 'income',
+    y = 'spending_score',
+    hue = 'cluster' ,
+    data= df_cluster
+)
+
+
+# evaluation 
+kmeans_score = silhouette_score(X_scaled, df_cluster['cluster'])
+round(kmeans_score, 3)
+
+# we will see how you silhouette_score would differ with different k values
+
+sil_score = []
+for k in k_range:
+    model = KMeans(n_clusters= k, random_state= RANDOM_STATE, n_init= 10)
+    cluster_label = model.fit_predict(X_scaled)
+    sil = silhouette_score(X_scaled,cluster_label)
+    sil_score.append(sil)
+plt.figure(figsize=(10,7))
+plt.plot(list(k_range) , sil_score, marker = 'o')
+plt.xlabel('k cluster')
+plt.ylabel('silhouette score')
+plt.title('silhouette score for different k clusters')
+plt.show()
+ 
+# visualize clusters
+
+sns.scatterplot(
+    x = 'income',
+    y = 'spending_score',
+    hue = 'cluster' ,
+    data= df_cluster,
+    palette= 'tab10',
+    s = 12
+)
+
+## cluster interpretation
+### business profiling 
+profile_cols =  ["age", "income", "spending_score", "last_purchase_amount"]
+cluster_sizes = df_cluster["cluster"].value_counts().sort_index()
+cluster_sizes_mean = df_cluster.groupby('cluster')[profile_cols].mean().round(2)
+cluster_sizes_median = df_cluster.groupby('cluster')[profile_cols].median().round(2)
+cluster_sizes_mean
+
+df.columns
+
+plt.bar(range(0,5),cluster_sizes)
