@@ -47,3 +47,13 @@ Things that I've learned from each projects are linked and written in Farsi.
 - تعیین و ارزیابی خوب بودن مدل clustring توسط معیارهای متفاوتی تعیین می شود یکی از آنها silhouette score است.
   - این روش ارزیابی مدل های clustring مانند kmeans کاری که انجام می دهد به این شیوه است:
   - اول از همه فاصله بین خود هر cluster را اندازه گیری می کند و بعد از فاصله هر کلاستر را نسبت به کلاسترهای دیگر اندازه گیری می کند و یک عددی بین ۱- تا +۱ به ما می دهد.
+
+
+
+
+
+## NLP projects :
+
+
+
+
