@@ -6,7 +6,7 @@ import pandas as pd
 
 from collections import Counter
 
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, TfidfTransformer
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
@@ -107,3 +107,70 @@ def clean_text(s: str) -> str:
     s = re.sub(r"[^a-z0-9\s\.\,\!\?\-\']", " ", s)   # keep basic chars
     s = re.sub(r"\s+", " ", s).strip()               # normalize spaces
     return s
+
+
+df['content'] = (df['title'] + ' ' + df['text']).apply(clean_text)
+
+
+## adding additional columns for analysis ##
+df['title_len_char'] = df['title'].str.len()
+df['text_len_char'] = df['text'].str.len()
+df['content_len_words'] = df['content'].str.split().apply(len)
+
+
+num_cols = ['title_len_char', 'text_len_char', 'content_len_words']
+df[num_cols].describe().T
+
+
+## data visualization ##
+sns.countplot(x = 'label', data= df)
+# - we have almost equal label dist.
+
+
+# boxplots for fake news and real news
+fake_len = df[df["label"] == 0]['content_len_words'].values
+real_len = df[df["label"] == 1]['content_len_words'].values
+
+
+plt.boxplot([fake_len, real_len], showfliers = False)
+plt.show()
+
+
+X = df['content']
+y = df['label']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=RANDOM_STATE)
+
+
+model_pip = Pipeline(
+    steps= [
+        ('tfidf', TfidfVectorizer(
+            max_features= 50000,
+            ngram_range= (1,2),
+            stop_words = 'english',
+            min_df = 2
+        )),
+        ('model', LogisticRegression())
+        
+    ]
+)
+
+
+
+
+# train pipline
+model_pip.fit(X_train, y_train)
+
+
+## model Evaluation ##
+y_pred_train = model_pip.predict(X_train)
+y_pred = model_pip.predict(X_test)
+
+acc_train = accuracy_score(y_pred_train, y_train)
+acc_test = accuracy_score(y_pred , y_test)
+cm_train = confusion_matrix(y_pred , y_test)
+print(classification_report(y_pred , y_test))
+
+
+
+
