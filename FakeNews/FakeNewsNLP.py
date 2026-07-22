@@ -50,3 +50,60 @@ df.drop(columns= ['Unnamed: 0'], inplace= True)
 # target distribution.
 df['label'].value_counts()
 
+
+df_real = df[df['label'] == 1]
+df_fake = df[df['label'] == 0]
+
+n_samples = 1000
+
+
+data_fake = df_fake.sample(n_samples, random_state= RANDOM_STATE)
+data_real = df_real.sample(n_samples, random_state= RANDOM_STATE)
+
+df = (
+    
+    pd.concat([data_real, data_fake]).sample(frac = 1,
+                                             random_state=RANDOM_STATE).reset_index(drop=True)
+    
+)
+df
+
+df.columns
+df.info()
+df.isnull().sum()
+df.dropna(inplace=True)
+
+
+df['label'].value_counts()
+df['label'].value_counts(normalize=True)
+
+
+## text cleaning ##
+
+df['text']
+
+
+def clean_text(s: str) -> str:
+    """
+    text cleaning:
+    - lowercase
+    - remove URLs
+    - remove html tags
+    - normalize spaces
+
+    Args:
+        s (str):
+        - this function only gets str objects
+
+    Returns:
+        str: 
+        - this function only return str objects
+    """
+    if pd.isna(s):
+        return ''
+    s = str(s).lower()
+    s = re.sub(r"http\S+|www\.\S+", " ", s)          # URLs
+    s = re.sub(r"<.*?>", " ", s)                    # HTML tags
+    s = re.sub(r"[^a-z0-9\s\.\,\!\?\-\']", " ", s)   # keep basic chars
+    s = re.sub(r"\s+", " ", s).strip()               # normalize spaces
+    return s
