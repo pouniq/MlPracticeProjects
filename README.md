@@ -53,6 +53,14 @@ Things that I've learned from each projects are linked and written in Farsi.
 
 
 ## NLP projects :
+- [Fake News](https://pouniq.github.io/MlPracticeProjects_reports/FNP_index.html)
+
+### خلاصه نکات:
+- از مدل LogisticRegression استفاده کردم و جواب خوبی بهم داد.
+- می توانم model_selection انجام بدم و بهترین مدل رو انتخاب کنیم.
+- از TF_IDF_Vectorization استفاده کردم که به طور خودکار مدل رو متنی رو تبدیل به عدد می کنه و نرمال هم حتی می کنه اعداد رو.
+    - به همین دلیل برای مدل logisticRegression نیاز به استاندارد کردن نبود.
+- به دلیل حجم زیاد جامعه ای که داشتیم نمونه از آن را گرفتیم و مدل سازی انجام دادیم.
 
 
 
