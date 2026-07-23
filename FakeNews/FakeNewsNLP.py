@@ -7,10 +7,12 @@ import pandas as pd
 from collections import Counter
 
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, TfidfVectorizer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate, RandomizedSearchCV, KFold, GridSearchCV
 from sklearn.pipeline import Pipeline
 
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
 
 from sklearn.metrics import (
     accuracy_score,
@@ -173,4 +175,103 @@ print(classification_report(y_pred , y_test))
 
 
 
+# build predictive system
+def pred_news(title, text):
+    combined_text = clean_text(f"{title} {text}")
+    pred = model_pip.predict([combined_text])
+    print(pred)
+    if pred == 0:
+        print('The news is fake')
+    else: 
+        print('The news is Real')
+    
+
+example_title = "Breaking: Government announces new economic policy"
+example_text = "The finance minister introduced a new policy today after discussions in parliament..."
+pred_news(example_title, example_title)
+
+
+
+# Model selection
+models = {
+    'LogisticRegression': LogisticRegression(),
+    'SVC': LinearSVC(),
+    'NaiveBayes': MultinomialNB()
+}
+
+k = 5
+cv = KFold(
+    n_splits= k,
+    shuffle= True,
+    random_state=RANDOM_STATE
+)
+
+scoring = 'accuracy'
+
+rows = []
+for name, model in models.items():
+    pipe = Pipeline(
+        steps=[
+            ('tfidftransform', TfidfVectorizer(
+                max_features= 50000,
+                min_df= 2,
+                stop_words= 'english',
+                ngram_range= (1,2)
+            )) ,
+            ('model', model)
+        ]
+    )
+    scores = cross_validate(pipe, X_train, y_train, cv = cv , scoring=scoring,
+                            n_jobs= -1)
+    rows.append({
+        'model': name,
+        'cv_acc': scores['test_score'].mean(),
+    })
+
+# sort based on lowest rmse value:
+cv_results = pd.DataFrame(rows).sort_values('cv_acc', ascending = False)
+print('CV model comparison')
+print(cv_results)
+
+## best model for my data is SVC ##
+svc_pip = Pipeline(
+    steps=[
+        ('tfidftransform', TfidfVectorizer()),
+        ('model', LinearSVC(
+            random_state= RANDOM_STATE
+        ))
+    ]
+)
+
+
+param_grid = {
+    'model__penalty': ['l1', 'l2'],
+    'model__loss': ['hinge', 'squared_hinge'],
+    'model__multi_class': ['ovr', 'crammer_singer'],
+    'model__C': [0.01, 0.1, 1, 10, 100],
+    'model__class_weight': [None, 'balanced'],
+}
+
+grid_r = RandomizedSearchCV(
+    estimator=svc_pip,
+    param_distributions = param_grid,
+    cv = cv ,
+    scoring= 'accuracy',
+    n_jobs= -1,
+    verbose= 1
+)
+
+
+grid = GridSearchCV(
+    estimator=svc_pip,
+    param_grid = param_grid,
+    cv = cv ,
+    scoring= 'accuracy',
+    n_jobs= -1,
+    verbose= 1
+)
+
+grid.fit(X_train, y_train)
+grid.best_params_
+grid.best_score_
 
