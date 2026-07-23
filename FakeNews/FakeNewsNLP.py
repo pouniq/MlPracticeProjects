@@ -252,14 +252,14 @@ param_grid = {
     'model__class_weight': [None, 'balanced'],
 }
 
-grid_r = RandomizedSearchCV(
-    estimator=svc_pip,
-    param_distributions = param_grid,
-    cv = cv ,
-    scoring= 'accuracy',
-    n_jobs= -1,
-    verbose= 1
-)
+# grid_r = RandomizedSearchCV(
+#     estimator=svc_pip,
+#     param_distributions = param_grid,
+#     cv = cv ,
+#     scoring= 'accuracy',
+#     n_jobs= -1,
+#     verbose= 1
+# )
 
 
 grid = GridSearchCV(
@@ -274,4 +274,13 @@ grid = GridSearchCV(
 grid.fit(X_train, y_train)
 grid.best_params_
 grid.best_score_
+
+svc_model = LinearSVC(
+    C = 1,
+    class_weight= None,
+    loss= 'squared_hinge',
+    multi_class= 'ovr',
+    penalty='l1'
+)
+
 
