@@ -63,5 +63,6 @@ Things that I've learned from each projects are linked and written in Farsi.
 - به دلیل حجم زیاد جامعه ای که داشتیم نمونه از آن را گرفتیم و مدل سازی انجام دادیم.
 
 
+## Time Series :
 
 
